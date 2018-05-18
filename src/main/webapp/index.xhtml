@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h1>Cadastrar Album</h1>
+        <p:panelGrid columns="6" >
+            <h:form >
+                <h:outputLabel for="nome" value="Nome: " />
+                <p:inputText id="nome" value="#{cadastroAlbumMB.nome}" />
+                <h:outputLabel for="banda" value="Banda: " />
+                <p:selectOneMenu id="banda" value="#{cadastroAlbumMB.banda}" converter="${bandaConverter}">
+                    <f:selectItem itemLabel="Bandas" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{cadastroAlbumMB.bandas}" />
+                </p:selectOneMenu>
+                <h:outputLabel for="estilos" value="estilos: " />
+                <p:selectOneMenu id="estilos" value="#{cadastroAlbumMB.estilo}">
+                    <f:selectItem itemLabel="Estilos" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{cadastroAlbumMB.estilos}" />
+                </p:selectOneMenu>
+                <p:outputLabel for="ano" value="Ano de Lançamento" />
+                <p:calendar id="ano" value="#{cadastroAlbumMB.ano}" pattern="dd/MM/yyyy" converter="#{localDateConverter}"/>
+                <p:commandButton value="Cadastrar" update="@(#table)" icon="ui-icon-check" action="#{cadastroAlbumMB.cadastrar(albumTableView)}"/>
+            </h:form>
+        </p:panelGrid>
+        <p:dataTable id="table" var="album" value="#{albumTableView.albuns}" resizableColumns="true"
+                     rows="10" paginator="true"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rowsPerPageTemplate="5,10,15"> 
+
+            <p:column headerText="NOME" id="coluna-id" resizable="true" style="width: 2em">
+                <h:outputText value="#{album.nome}" />
+            </p:column>
+
+            <p:column headerText="BANDA" style="width: auto">
+                <h:outputText value="#{album.banda}" />
+            </p:column>
+
+            <p:column headerText="ESTILO" style="width: 10em">
+                <h:outputText value="#{album.estilo}" />
+            </p:column>
+
+            <p:column headerText="ANO" style="width: 10em">
+                <h:outputText value="#{album.anoDeLancamento}" />
+            </p:column>
+
+            <p:column headerText="DELETE" style="width: 5em; text-align: center">
+                <h:form>
+                    <p:commandButton icon="fa-remove" update="@(#table)" action="#{albumTableView.deleteAlbum(album.nome)}"/>
+                </h:form>
+            </p:column>
+
+        </p:dataTable>
+
+    </h:body>
+</html>
+
