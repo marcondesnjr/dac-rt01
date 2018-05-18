@@ -8,10 +8,12 @@
     <packaging>war</packaging>
 
     <name>dac-atividade-02</name>
+    
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
     </properties>
     
     <dependencies>
@@ -44,6 +46,7 @@
     </dependencies>
 
     <build>
+        <finalName>dac-atividade-02</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -100,4 +103,66 @@
             <name>Repository for library PrimeFaces-maven-lib</name>
         </repository>
     </repositories>
+    
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <echo>Usando database do docker</echo>
+                                        <delete file="${project.build.outputDirectory}/db-config.properties"/>
+                                        <copy file="src/main/resources/db-config-docker.properties"
+                                              tofile="${project.build.outputDirectory}/db-config.properties"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <echo>Usando database local</echo>
+                                        <delete file="${project.build.outputDirectory}/db-config.properties"/>
+                                        <copy file="src/main/resources/db-config-local.properties"
+                                              tofile="${project.build.outputDirectory}/db-config.properties"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+    </profiles>
+    
+    
 </project>
